@@ -1,0 +1,3 @@
+[submodule "linuxconsole"]
+	path = linuxconsole
+	url = https://git.code.sf.net/p/linuxconsole/code

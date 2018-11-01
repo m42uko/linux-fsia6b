@@ -1,0 +1,34 @@
+From 30f59fe395be659fc1b1af774e8e7dd69cd55b69 Mon Sep 17 00:00:00 2001
+From: Markus Koch <markus@notsyncing.net>
+Date: Thu, 1 Nov 2018 22:23:40 +0100
+Subject: [PATCH] Add support for the FS-iA6B receiver
+
+---
+ utils/inputattach.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/utils/inputattach.c b/utils/inputattach.c
+index bdaafa33..3e266cf5 100644
+--- a/utils/inputattach.c
++++ b/utils/inputattach.c
+@@ -774,6 +774,9 @@ static struct input_types input_types[] = {
+ { "--wacom_iv",		"-wacom_iv",	"Wacom protocol 4 tablet",
+ 	B9600, CS8 | CRTSCTS,
+ 	SERIO_WACOM_IV,		0x00,	0x00,	0,	wacom_iv_init },
++{ "--fsia6b",		"-fsia6b",	"FS-iA6B RC Receiver",
++	B115200, CS8,
++	100,		0x00,	0x00,	0,	NULL },
+ { NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL }
+ };
+ 
+@@ -882,6 +885,7 @@ int main(int argc, char **argv)
+ 	case 9600: type->speed = B9600; break;
+ 	case 19200: type->speed = B19200; break;
+ 	case 38400: type->speed = B38400; break;
++	case 115200: type->speed = B115200; break;
+ 	default:
+ 		fprintf(stderr, "inputattach: invalid baud rate '%d'\n",
+ 				baud);
+-- 
+2.19.1
+
