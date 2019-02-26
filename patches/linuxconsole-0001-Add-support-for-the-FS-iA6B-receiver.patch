@@ -1,6 +1,6 @@
-From 30f59fe395be659fc1b1af774e8e7dd69cd55b69 Mon Sep 17 00:00:00 2001
-From: Markus Koch <markus@notsyncing.net>
-Date: Thu, 1 Nov 2018 22:23:40 +0100
+From 339a2bc99269466e05a546de2ac63c3cb46a2e6e Mon Sep 17 00:00:00 2001
+From: David Gardner <git@icmfp.com>
+Date: Tue, 26 Feb 2019 19:11:43 +0000
 Subject: [PATCH] Add support for the FS-iA6B receiver
 
 ---
@@ -8,20 +8,20 @@ Subject: [PATCH] Add support for the FS-iA6B receiver
  1 file changed, 4 insertions(+)
 
 diff --git a/utils/inputattach.c b/utils/inputattach.c
-index bdaafa33..3e266cf5 100644
+index 53528551..dd3112d6 100644
 --- a/utils/inputattach.c
 +++ b/utils/inputattach.c
-@@ -774,6 +774,9 @@ static struct input_types input_types[] = {
- { "--wacom_iv",		"-wacom_iv",	"Wacom protocol 4 tablet",
+@@ -864,6 +864,9 @@ static struct input_types input_types[] = {
+ { "--wacom_iv",		"-wacom_iv",	"Wacom protocol IV tablet",
  	B9600, CS8 | CRTSCTS,
  	SERIO_WACOM_IV,		0x00,	0x00,	0,	wacom_iv_init },
-+{ "--fsia6b",		"-fsia6b",	"FS-iA6B RC Receiver",
-+	B115200, CS8,
-+	100,		0x00,	0x00,	0,	NULL },
- { NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL }
- };
- 
-@@ -882,6 +885,7 @@ int main(int argc, char **argv)
++{ "--fsia6b",          "-fsia6b",      "FS-iA6B RC Receiver",
++       B115200, CS8,
++       100,            0x00,   0x00,   0,      NULL },
+ { "--pulse8-cec",		"-pulse8-cec",	"Pulse Eight HDMI CEC dongle",
+ 	B9600, CS8,
+ 	SERIO_PULSE8_CEC,		0x00,	0x00,	0,	NULL },
+@@ -978,6 +981,7 @@ int main(int argc, char **argv)
  	case 9600: type->speed = B9600; break;
  	case 19200: type->speed = B19200; break;
  	case 38400: type->speed = B38400; break;
@@ -30,5 +30,5 @@ index bdaafa33..3e266cf5 100644
  		fprintf(stderr, "inputattach: invalid baud rate '%d'\n",
  				baud);
 -- 
-2.19.1
+2.11.0
 
