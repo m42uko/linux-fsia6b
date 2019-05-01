@@ -197,7 +197,8 @@ static int fsia6b_serio_connect(struct serio *serio, struct serio_driver *drv)
 				(switch_config[i] > '3')) {
 			dev_err(&fsia6b->dev->dev,
 				"Invalid switch configuration supplied for fsia6b.\n");
-			return -EINVAL;
+			err = -EINVAL;
+			goto fail3;
 		}
 
 		for (j = '1'; j <= switch_config[i]; ++j) {
@@ -209,10 +210,11 @@ static int fsia6b_serio_connect(struct serio *serio, struct serio_driver *drv)
 
 	err = input_register_device(fsia6b->dev);
 	if (err)
-		goto fail2;
+		goto fail3;
 
 	return 0;
 
+fail3:	input_free_device(input_dev);
 fail2:	serio_close(serio);
 fail1:	serio_set_drvdata(serio, NULL);
 	kfree(fsia6b);
