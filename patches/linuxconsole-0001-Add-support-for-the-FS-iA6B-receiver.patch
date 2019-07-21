@@ -17,7 +17,7 @@ index 53528551..dd3112d6 100644
  	SERIO_WACOM_IV,		0x00,	0x00,	0,	wacom_iv_init },
 +{ "--fsia6b",          "-fsia6b",      "FS-iA6B RC Receiver",
 +       B115200, CS8,
-+       100,            0x00,   0x00,   0,      NULL },
++       0x42,            0x00,   0x00,   0,      NULL },
  { "--pulse8-cec",		"-pulse8-cec",	"Pulse Eight HDMI CEC dongle",
  	B9600, CS8,
  	SERIO_PULSE8_CEC,		0x00,	0x00,	0,	NULL },

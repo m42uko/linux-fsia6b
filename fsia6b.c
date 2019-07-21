@@ -1,22 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+ * FS-iA6B iBus RC receiver driver
  *
- *  FS-iA6B iBus RC receiver kernel driver
- *  Copyright (C) 2018 - 2019  Markus Koch <markus@notsyncing.net>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along
- *  with this program.
- *
+ * Copyright (C) 2018 - 2019  Markus Koch <markus@notsyncing.net>
  */
 
 /*
@@ -30,14 +16,17 @@
  *
  */
 
+#include <linux/device.h>
+#include <linux/input.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/input.h>
 #include <linux/serio.h>
 #include <linux/slab.h>
-#include <linux/device.h>
+#include <linux/types.h>
 
-#define SERIO_FSIA6B 100 /* TODO: This should be moved to the serio header */
+#ifndef SERIO_FSIA6B
+	#define SERIO_FSIA6B 0x42
+#endif
 
 #define DRIVER_DESC	"FS-iA6B iBus RC receiver"
 
@@ -68,8 +57,8 @@ struct ibus_packet {
 	enum ibus_state state;
 
 	int offset;
-	uint16_t ibuf;
-	uint16_t channel[IBUS_SERVO_COUNT];
+	u16 ibuf;
+	u16 channel[IBUS_SERVO_COUNT];
 };
 
 struct fsia6b {
@@ -150,9 +139,9 @@ static int fsia6b_serio_connect(struct serio *serio, struct serio_driver *drv)
 	struct input_dev *input_dev;
 	int err;
 	int i, j;
-	int sw_id = BTN_0;
+	int sw_id = 0;
 
-	fsia6b = kzalloc(sizeof(struct fsia6b), GFP_KERNEL);
+	fsia6b = kzalloc(sizeof(*fsia6b), GFP_KERNEL);
 	if (!fsia6b)
 		return -ENOMEM;
 
@@ -168,9 +157,10 @@ static int fsia6b_serio_connect(struct serio *serio, struct serio_driver *drv)
 
 
 	input_dev = input_allocate_device();
-	err = -ENODEV;
-	if (!input_dev)
+	if (!input_dev) {
+		err = -ENOMEM;
 		goto fail2;
+	}
 	fsia6b->dev = input_dev;
 
 	snprintf(fsia6b->phys, sizeof(fsia6b->phys), "%s/input0", serio->phys);
@@ -182,8 +172,6 @@ static int fsia6b_serio_connect(struct serio *serio, struct serio_driver *drv)
 	input_dev->id.product = serio->id.id;
 	input_dev->id.version = 0x0100;
 	input_dev->dev.parent = &serio->dev;
-
-	input_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
 
 	for (i = 0; i < IBUS_SERVO_COUNT; ++i) {
 		input_set_abs_params(input_dev, fsia6b_axes[i],
@@ -201,9 +189,9 @@ static int fsia6b_serio_connect(struct serio *serio, struct serio_driver *drv)
 			goto fail3;
 		}
 
-		for (j = '1'; j <= switch_config[i]; ++j) {
-			input_dev->keybit[BIT_WORD(BTN_0)] |=
-					BIT_MASK(sw_id++);
+		for (j = '1'; j <= switch_config[i]; ++j) {			
+			input_set_capability(input_dev, EV_KEY, BTN_0 + sw_id);
+			sw_id++;
 		}
 
 	}
