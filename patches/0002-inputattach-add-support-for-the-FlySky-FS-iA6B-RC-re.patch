@@ -1,0 +1,42 @@
+From c34fff11dea62368151274dc307420b753ce2900 Mon Sep 17 00:00:00 2001
+From: Markus Koch <markus@notsyncing.net>
+Date: Fri, 26 Jul 2019 18:35:31 +0200
+Subject: [PATCH 2/2] inputattach: add support for the FlySky FS-iA6B RC
+ receiver
+
+Signed-off-by: Markus Koch <markus@notsyncing.net>
+---
+ utils/inputattach.c | 3 +++
+ utils/serio-ids.h   | 3 +++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/utils/inputattach.c b/utils/inputattach.c
+index 31cc431f..90260f85 100644
+--- a/utils/inputattach.c
++++ b/utils/inputattach.c
+@@ -902,6 +902,9 @@ static struct input_types input_types[] = {
+ { "--rainshadow-cec",		"-rainshadow-cec",	"RainShadow Tech HDMI CEC dongle",
+ 	B9600, CS8,
+ 	SERIO_RAINSHADOW_CEC,		0x00,	0x00,	0,	NULL },
++{ "--fsia6b",		"-fsia6b",	"FS-iA6B RC Receiver",
++	B115200, CS8,
++	SERIO_FSIA6B,		0x00,	0x00,	0,	NULL },
+ { NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL }
+ };
+ 
+diff --git a/utils/serio-ids.h b/utils/serio-ids.h
+index ab52b0dc..aa0c48fb 100644
+--- a/utils/serio-ids.h
++++ b/utils/serio-ids.h
+@@ -137,5 +137,8 @@
+ #ifndef SERIO_RAINSHADOW_CEC
+ # define SERIO_RAINSHADOW_CEC	0x41
+ #endif
++#ifndef SERIO_FSIA6B
++# define SERIO_FSIA6B		0x42
++#endif
+ 
+ #endif
+-- 
+2.22.0
+
